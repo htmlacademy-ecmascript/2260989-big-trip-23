@@ -6,11 +6,16 @@
   "scripts": {
     "lint": "eslint src/"
   },
-  "devDependencies": {
-    "eslint": "8.38.0",
-    "eslint-config-htmlacademy": "9.0.0"
-  },
   "engines": {
     "node": "20"
+  },
+  "volta": {
+    "node": "22.0.0"
+  },
+  "dependencies": {
+    "object-hash": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint-config-htmlacademy": "^10.0.1"
   }
 }
