@@ -1,6 +1,6 @@
 import {render} from '../render.js';
 import EventList from '../view/event-list-view.js';
-import EditView from '../view/event--edit-view.js';
+import EditView from '../view/event-edit-view.js';
 import EventView from '../view/event-view.js';
 export default class EventPresenter {
   eventComponent = new EventList();
