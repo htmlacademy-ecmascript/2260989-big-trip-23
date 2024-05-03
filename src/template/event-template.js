@@ -36,6 +36,7 @@ function createEventTemplate(){
           <span class="visually-hidden">Open event</span>
         </button>
       </div>
-    </li>`;
+    </li>
+  `;
 }
 export {createEventTemplate};

@@ -3,7 +3,7 @@ import {createEventsListTemplate} from '../template/event-list-template.js';
 
 export default class EventList {
   getTemplate() {
-    return createEventsListTemplate;
+    return createEventsListTemplate();
   }
 
   getElement() {

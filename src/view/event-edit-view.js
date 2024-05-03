@@ -3,7 +3,7 @@ import {createEditTemplate} from '../template/event-edit-template.js';
 
 export default class EditView {
   getTemplate() {
-    return createEditTemplate;
+    return createEditTemplate();
   }
 
   getElement() {
@@ -14,6 +14,6 @@ export default class EditView {
   }
 
   removeElement(){
-    this.eement = null;
+    this.element = null;
   }
 }
