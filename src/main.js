@@ -1,22 +1,16 @@
-import {render} from '../src/render.js';
-import FilterView from '../src/view/filter-view.js';
-import SortView from '../src/view/sort-view.js';
+import TripInfoView from './view/trip-info-view.js';
+import TripCostView from './view/trip-cost-view.js';
+import FilterView from './view/filter-view.js';
+import EventsPresenter from './presenter/events-presenter.js';
+import {render} from './render.js';
 
+const siteTripInfoElement = document.querySelector('.trip-info');
+const siteTripControlsElement = document.querySelector('.trip-controls');
+const siteMainElement = document.querySelector('.trip-events');
+const eventsPresenter = new EventsPresenter({eventsContainer: siteMainElement});
 
-import EventPresenter from './presenter/event-presenter.js';
+render(new TripInfoView(), siteTripInfoElement);
+render(new TripCostView(), siteTripInfoElement);
+render(new FilterView(), siteTripControlsElement);
 
-
-const pageHeader = document.querySelector('.page-header');
-const tripFilters = pageHeader.querySelector('.trip-controls__filters');
-
-const pageMain = document.querySelector('.page-body__page-main');
-const tripEvents = pageMain.querySelector('.trip-events');
-
-
-const eventPresenter = new EventPresenter({eventContainer: tripEvents});
-
-render (new FilterView(),tripFilters);
-render (new SortView(), tripEvents);
-
-
-eventPresenter.init();
+eventsPresenter.init();
