@@ -1,8 +1,8 @@
 import {createElement} from '../render.js';
 
-export default class EventsList {
+export default class EventListView {
   getTemplate() {
-    return createEventsListTemplate();
+    return createEventListTemplate();
   }
 
   getElement() {
@@ -18,6 +18,6 @@ export default class EventsList {
   }
 }
 
-function createEventsListTemplate() {
-  return '<ul class="trip-events__list">';
+function createEventListTemplate() {
+  return '<ul class="trip-events__list"></ul>';
 }
