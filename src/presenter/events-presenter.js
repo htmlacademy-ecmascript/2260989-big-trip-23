@@ -1,5 +1,4 @@
 import EventsList from '../view/events-list-view.js';
-import NewPointView from '../view/new-point-form-view.js';
 import EditPointView from '../view/edit-point-form-view.js';
 import PointView from '../view/point-view.js';
 import SortView from '../view/sort-view.js';
