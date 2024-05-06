@@ -1,22 +1,22 @@
-import {render} from '../src/render.js';
-import FilterView from '../src/view/filter-view.js';
-import SortView from '../src/view/sort-view.js';
+import {render,RenderPosition} from './render.js';
+import TripInfoView from './view/trip-info-view.js';
+import FiltersView from './view/filters-view.js';
+import PointsPresenter from './presenter/points-presenter.js';
+import PointsModel from './model/event-points-model.js';
+import OffersModel from './model/offers-model.js';
+import DestinationsModel from './model/destinations-model.js';
 
+const tripMainContainer = document.querySelector('.trip-main');
+const tripEventsContainer = document.querySelector('.trip-events');
+const filtersContainer = tripMainContainer.querySelector('.trip-controls__filters');
+const pointsModel = new PointsModel();
+const offersModel = new OffersModel();
+const destinationsModel = new DestinationsModel();
 
-import EventPresenter from './presenter/event-presenter.js';
+//Создаем новый класс для управления представлением точек маршрута на основе переданных данных
+const pointsPresenter = new PointsPresenter({tripEventsContainer,pointsModel,offersModel,destinationsModel});
 
+render(new TripInfoView(), tripMainContainer, RenderPosition.AFTERBEGIN);
+render(new FiltersView(), filtersContainer);
 
-const pageHeader = document.querySelector('.page-header');
-const tripFilters = pageHeader.querySelector('.trip-controls__filters');
-
-const pageMain = document.querySelector('.page-body__page-main');
-const tripEvents = pageMain.querySelector('.trip-events');
-
-
-const eventPresenter = new EventPresenter({eventContainer: tripEvents});
-
-render (new FilterView(),tripFilters);
-render (new SortView(), tripEvents);
-
-
-eventPresenter.init();
+pointsPresenter.init();

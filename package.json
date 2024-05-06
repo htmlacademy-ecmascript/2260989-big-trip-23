@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "ci": "^2.3.0",
+    "dayjs": "^1.11.9",
     "node": "^22.0.0",
     "object-hash": "^3.0.0"
   },
