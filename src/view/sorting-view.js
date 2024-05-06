@@ -1,5 +1,6 @@
 import {createElement} from '../render.js';
 
+//Создаем класс для управления представлением компонента сортировки в UI
 export default class SortingView {
   getTemplate() {
     return createSortingTemplate();

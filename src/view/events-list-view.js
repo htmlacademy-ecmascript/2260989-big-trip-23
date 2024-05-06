@@ -1,5 +1,7 @@
 import {createElement} from '../render.js';
 
+
+//Класс для создания и упрвления списком событий в UI
 export default class EventListView {
   getTemplate() {
     return createEventListTemplate();
