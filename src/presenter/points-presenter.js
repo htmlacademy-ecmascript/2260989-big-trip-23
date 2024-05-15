@@ -28,7 +28,7 @@ export default class PointsPresenter {
   }
 
   init() {
-    if (this.#points.length === 0) {
+    if (!this.#points.length) {
       render(new EventLisEmptytView(), this.#pointsContainer);
       return;
     }
