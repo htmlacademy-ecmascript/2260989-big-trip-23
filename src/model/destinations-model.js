@@ -1,10 +1,8 @@
-import {getDestinations} from '../mock/destinations.js';
-
-
 //Создаем класс для управления данными о пунктах назначения
 export default class DestinationsModel {
-  constructor() {
-    this.destinations = getDestinations(); //Возвращаем массив пунктов назначения
+  constructor(service) {
+    this.service = service;
+    this.destinations = this.service.getDestinations();
   }
 
   get() {
@@ -12,6 +10,7 @@ export default class DestinationsModel {
   }
 
   getById(id) {
-    return this.destinations.find((destination) => destination.id === id); //Возвращаем объект пункта назначения согласно id
+    return this.destinations
+      .find((destination) => destination.id === id);
   }
 }

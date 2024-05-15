@@ -1,32 +1,93 @@
-import {render} from '../render.js';
-import EventListView from '../view/events-list-view.js';
-import EventItemView from '../view/event-item-view.js';
+import {render,replace} from '../framework/render.js';
+import EventListView from '../view/event-list-view.js';
+import EventLisEmptytView from '../view/event-list-empty-view.js';
+import PointView from '../view/point-view.js';
 import PointEditorView from '../view/point-editor-view.js';
 import SortingView from '../view/sorting-view.js';
 
-//Создаем класс который отвечает за представление данных о точках событий
 export default class PointsPresenter {
-  listComponent = new EventListView(); //Создаем новый экземпляр списка событий
-  sortingComponent = new SortingView(); //Создаем новый экземпляр компонента сортировки
+  #pointsContainer = null;
+  #pointsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
+  #points = [];
+  #listComponent = new EventListView();
+  #sortingComponent = new SortingView();
 
-  constructor({tripEventsContainer,pointsModel,offersModel,destinationsModel}) { //Сохраняем ссылки на контейнеры (события, модели точек, предложение и направление)
-    this.tripEventsContainer = tripEventsContainer;
-    this.pointsModel = pointsModel;
-    this.offersModel = offersModel;
-    this.destinationsModel = destinationsModel;
+  constructor({
+    pointsContainer,
+    pointsModel,
+    offersModel,
+    destinationsModel
+  }) {
+    this.#pointsContainer = pointsContainer;
+    this.#pointsModel = pointsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
+    this.#points = [...this.#pointsModel.get()];
   }
 
   init() {
-    this.eventPoints = [...this.pointsModel.getEventPoints()];
-
-    render(this.sortingComponent, this.tripEventsContainer);
-    render(this.listComponent, this.tripEventsContainer);
-    render(new PointEditorView(), this.listComponent.getElement());
-
-    for (let i = 0; i < this.eventPoints.length; i++) {
-      const offers = this.offersModel.getByType(this.eventPoints[i].type); //Получаем предложения соответствующие типу события
-      const destination = this.destinationsModel.getById(this.eventPoints[i].destination); //Получаем информацию о направлении
-      render(new EventItemView({eventPoint: this.eventPoints[i],offers,destination}), this.listComponent.getElement()); //Рендерим представление каждого события
+    if (this.#points.length === 0) {
+      render(new EventLisEmptytView(), this.#pointsContainer);
+      return;
     }
+
+    render(this.#sortingComponent, this.#pointsContainer);
+    render(this.#listComponent, this.#pointsContainer);
+
+    this.#points.forEach((point) => {
+      this.#renderPoint(point);
+    });
   }
+
+  #renderPoint = (point) => {
+    const pointComponent = new PointView({
+      point,
+      pointDestination: this.#destinationsModel.getById(point.destination),
+      pointOffers: this.#offersModel.getByType(point.type),
+      onEditClick: pointEditHandler,
+    });
+
+    const pointEditComponent = new PointEditorView({
+      point,
+      pointDestination: this.#destinationsModel.getById(point.destination),
+      pointOffers: this.#offersModel.getByType(point.type),
+      onCloseClick: pointCloseHandler,
+      onSubmitForm: pointSubmitHandler
+    });
+
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceEditorToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    function replacePointToEditor() {
+      replace(pointEditComponent, pointComponent);
+    }
+
+    function replaceEditorToPoint() {
+      replace(pointComponent, pointEditComponent);
+    }
+
+    function pointEditHandler () {
+      replacePointToEditor();
+      document.addEventListener('keydown', escKeyDownHandler);
+    }
+
+    function pointSubmitHandler() {
+      replaceEditorToPoint();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    }
+
+    function pointCloseHandler() {
+      replaceEditorToPoint();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    }
+
+    render(pointComponent, this.#listComponent.element);
+  };
 }

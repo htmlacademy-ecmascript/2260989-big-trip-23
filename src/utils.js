@@ -1,39 +1,42 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
-import {MSEC_IN_HOUR,MSEC_IN_DAY,DURATION_FORMATS} from './const.js';
 
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)]; //Случайный элемент массива
-const getRandomPositiveNumber = (max) => Math.ceil(Math.random() * max); //Генерация случайного целого числа
-const humanizeDate = (currentDate, format) => currentDate ? dayjs(currentDate).format(format) : ''; //Функция приведения переданной даты к переданному формату
+const MSEC_IN_SEC = 1000;
+const SEC_IN_MIN = 60;
+const MIN_IN_HOUR = 60;
+const HOUR_IN_DAY = 24;
 
-//Функция форматирования и свычисление продолжительности между двумя датами
-const calculateDuration = (dateFrom, dateTo) => {
-  const diff = dayjs(dateTo).diff(dayjs(dateFrom)); //Вычисление разницы в мс между двумя датами
+const MSEC_IN_HOUR = MSEC_IN_SEC * SEC_IN_MIN * MIN_IN_HOUR;
+const MSEC_IN_DAY = MSEC_IN_HOUR * HOUR_IN_DAY;
 
-  let pointDuration;
+const getRandomPositiveNumber = (min = 0, max = 1) => {
+  const lower = Math.ceil(Math.min(min, max));
+  const upper = Math.floor(Math.max(min, max));
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
 
-  switch (true) {
-    case (diff >= MSEC_IN_DAY):
-      pointDuration = dayjs.duration(diff).format(DURATION_FORMATS.days);
-      break;
-    case (diff >= MSEC_IN_HOUR):
-      pointDuration = dayjs.duration(diff).format(DURATION_FORMATS.hours);
-      break;
-    case (diff < MSEC_IN_HOUR):
-      pointDuration = dayjs.duration(diff).format(DURATION_FORMATS.mins);
-      break;
+const getRandomArrayElement = (items) => items[getRandomPositiveNumber(0, items.length - 1)];
+
+const formatStringToDate = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
+const formatStringToDelimetrDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
+const formatStringToShortDate = (date) => dayjs(date).format('MMM DD');
+const formatStringToTime = (date) => dayjs(date).format('HH:mm');
+
+const calcDuration = (dateFrom, dateTo) => {
+  const diff = dayjs(dateTo).diff(dayjs(dateFrom));
+
+  if (diff >= MSEC_IN_DAY) {
+    return dayjs.duration(diff).format('DD[D] HH[H] mm[M]');
   }
-
-  return pointDuration;
+  if (diff >= MSEC_IN_HOUR) {
+    return dayjs.duration(diff).format('HH[H] mm[M]');
+  }
+  if (diff < MSEC_IN_HOUR) {
+    return dayjs.duration(diff).format('mm[M]');
+  }
 };
 
-//Функция-счетчик, увеличивает на 1 ед. значение counterStart начиная с START_FROM
-const incrementCounter = (START_FROM) => {
-  let counterStart = START_FROM;
-  return function() {
-    return counterStart++;
-  };
-};
+const toCapitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
-export {getRandomArrayElement,getRandomPositiveNumber,calculateDuration,incrementCounter,humanizeDate};
+export {MSEC_IN_HOUR,MSEC_IN_DAY,getRandomArrayElement,getRandomPositiveNumber,formatStringToDate,formatStringToShortDate,formatStringToTime,formatStringToDelimetrDate,toCapitalize,calcDuration,};

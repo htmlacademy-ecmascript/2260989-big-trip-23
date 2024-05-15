@@ -1,16 +1,16 @@
-import {getOffers} from '../mock/offers.js';
-
 //Создаем класс для управления предложениями услуг трансопрта
 export default class OffersModel {
-  constructor() {
-    this.offers = getOffers(); //Возвращаем массив объектов услуг транспорта
+  constructor(service) {
+    this.service = service;
+    this.offers = this.service.getOffers();
   }
 
   get() {
     return this.offers;
   }
 
-  getByType(type) { //Возвращаем объект предложения, соответствующий переданному type(строка)
-    return this.offers.find((offers) => offers.type === type.toLowerCase()).offers;
+  getByType(type) {
+    return this.offers
+      .find((offer) => offer.type === type).offers;
   }
 }
