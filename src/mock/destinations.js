@@ -1,27 +1,21 @@
-import {DESCCRIPTIONS,CITIES} from '../const.js';
-import {incrementCounter,getRandomArrayElement,getRandomPositiveNumber} from '../utils.js';
+import {DESCRIPTION,CITIES,Counts} from '../const.js';
+import {getRandomArrayElement,getRandomPositiveNumber} from '../utils.js';
 
-const MAX_IMAGES_COUNT = 5;
-const START_ID_COUNTER = 1;
-const getCityID = incrementCounter(START_ID_COUNTER);
-
-//Создаем объект с информацией о пункте назначения
-const setupDestination = () => {
-  const ID = getCityID();
+const generateDestinations = () => {
+  const city = getRandomArrayElement(CITIES);
   return ({
-    id: (ID).toString(),
-    description: getRandomArrayElement(DESCCRIPTIONS),
-    name: CITIES[ID - 1],
+    id: crypto.randomUUID(),
+    name: city,
+    description: DESCRIPTION,
     pictures: Array.from({
-      length: getRandomPositiveNumber(MAX_IMAGES_COUNT)
+      length: getRandomPositiveNumber(0, Counts.DESCRIPTION_PHOTO)
     }, () => ({
-      src: `https://loremflickr.com/248/152?${ID}`,
-      description: getRandomArrayElement(DESCCRIPTIONS)
+      src: `https://loremflickr.com/248/152?${crypto.randomUUID()}`,
+      description: `It is ${city} description`
     }))
   });
 };
 
-//Создаем массив объектов пунктов назначения
-const getDestinations = () => Array.from({length: CITIES.length}, setupDestination);
-
-export {getDestinations};
+export {
+  generateDestinations
+};
