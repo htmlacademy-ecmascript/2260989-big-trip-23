@@ -6,9 +6,11 @@ export default class SortPresenter {
   #container = null;
   #sorTypes = [];
   #currentSortType = SortType.DAY;
+  #sortTypesChangeHandler = null;
 
-  constructor({container}) {
+  constructor({container, sortTypeHandler}) {
     this.#container = container;
+    this.#sortTypesChangeHandler = sortTypeHandler;
     this.#sorTypes = Object.values(SortType).map((type) => ({
       type,
       isChecked: (type === this.#currentSortType),
@@ -19,6 +21,7 @@ export default class SortPresenter {
   init() {
     render(new SortingView({
       items: this.#sorTypes,
+      onItemChange: this.#sortTypesChangeHandler
     }), this.#container);
   }
 }

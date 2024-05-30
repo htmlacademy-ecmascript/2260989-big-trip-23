@@ -43,15 +43,4 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-export {
-  CITIES,
-  DESCRIPTION,
-  EVENT_TYPES,
-  FilterType,
-  SortType,
-  enabledSortType,
-  Counts,
-  Price,
-  Duration,
-  Mode
-};
+export {CITIES, DESCRIPTION, EVENT_TYPES, FilterType, SortType, enabledSortType, Counts, Price, Duration, Mode};

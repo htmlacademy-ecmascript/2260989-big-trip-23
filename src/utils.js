@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativetime from 'dayjs/plugin/relativeTime';
 import {FilterType} from './const.js';
+import {SortType} from './const.js';
+
 dayjs.extend(duration);
 dayjs.extend(relativetime);
 
@@ -54,6 +56,26 @@ const filter = {
   [FilterType.PAST]: (points) => points.filter((point) => isPointPast(point))
 };
 
+const getPointsByDate = (pointA, pointB) => dayjs(pointB.dateFrom).diff(dayjs(pointA.dateFrom));
+const getPointsByTime = (pointA, pointB) => {
+  const pointADuration = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const pointBDuration = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+  return pointBDuration - pointADuration;
+};
+const getPointsByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
+const sorting = {
+  [SortType.DAY]: (points) => points.toSorted(getPointsByDate),
+  [SortType.EVENT]: () => {
+    throw new Error(`Sort by ${SortType.EVENT} is disabled`);
+  },
+  [SortType.TIME]: (points) => points.toSorted(getPointsByTime),
+  [SortType.PRICE]: (points) => points.toSorted(getPointsByPrice),
+  [SortType.OFFER]: () => {
+    throw new Error(`Sort by ${SortType.OFFER} is disabled`);
+  },
+};
+
 export {
   MSEC_IN_HOUR,
   MSEC_IN_DAY,
@@ -67,4 +89,5 @@ export {
   calcDuration,
   updateItem,
   filter,
+  sorting
 };
