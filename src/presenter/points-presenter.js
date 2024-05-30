@@ -1,93 +1,84 @@
-import {render,replace} from '../framework/render.js';
+import {render} from '../framework/render.js';
 import EventListView from '../view/event-list-view.js';
 import EventLisEmptytView from '../view/event-list-empty-view.js';
-import PointView from '../view/point-view.js';
-import PointEditorView from '../view/point-editor-view.js';
-import SortingView from '../view/sorting-view.js';
+import PointPresenter from './point-presenter.js';
+import SortPresenter from './sort-presenter.js';
+import {updateItem} from '../utils.js';
 
 export default class PointsPresenter {
-  #pointsContainer = null;
-  #pointsModel = null;
+  #container = null;
   #destinationsModel = null;
   #offersModel = null;
+  #pointsModel = null;
   #points = [];
   #listComponent = new EventListView();
-  #sortingComponent = new SortingView();
+  #pointsPresenter = new Map();
 
   constructor({
-    pointsContainer,
-    pointsModel,
+    container,
+    destinationsModel,
     offersModel,
-    destinationsModel
+    pointsModel,
   }) {
-    this.#pointsContainer = pointsContainer;
-    this.#pointsModel = pointsModel;
+    this.#container = container;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
+    this.#pointsModel = pointsModel;
     this.#points = [...this.#pointsModel.get()];
   }
 
   init() {
     if (!this.#points.length) {
-      render(new EventLisEmptytView(), this.#pointsContainer);
+      this.#renderEmptyList();
       return;
     }
 
-    render(this.#sortingComponent, this.#pointsContainer);
-    render(this.#listComponent, this.#pointsContainer);
+    this.#renderSort();
+    this.#renderList();
+  }
 
+  #renderSort() {
+    const sortPresenter = new SortPresenter({
+      container: this.#container
+    });
+
+    sortPresenter.init();
+  }
+
+  #handleDataChange = (updatedPoint) => {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointsPresenter.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #handleModeChange = () => {
+    this.#pointsPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #renderEmptyList() {
+    render(new EventLisEmptytView(), this.#container);
+  }
+
+  #renderList() {
+    render(this.#listComponent, this.#container);
+    this.#renderPoints();
+  }
+
+  #renderPoints() {
     this.#points.forEach((point) => {
       this.#renderPoint(point);
     });
   }
 
-  #renderPoint = (point) => {
-    const pointComponent = new PointView({
-      point,
-      pointDestination: this.#destinationsModel.getById(point.destination),
-      pointOffers: this.#offersModel.getByType(point.type),
-      onEditClick: pointEditHandler,
+  #renderPoint(point) {
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#listComponent.element,
+      destinationsModel: this.#destinationsModel,
+      offersModel: this.#offersModel,
+      onPointChange: this.#handleDataChange,
+      onModeChange: this.#handleModeChange
     });
 
-    const pointEditComponent = new PointEditorView({
-      point,
-      pointDestination: this.#destinationsModel.getById(point.destination),
-      pointOffers: this.#offersModel.getByType(point.type),
-      onCloseClick: pointCloseHandler,
-      onSubmitForm: pointSubmitHandler
-    });
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditorToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    function replacePointToEditor() {
-      replace(pointEditComponent, pointComponent);
-    }
-
-    function replaceEditorToPoint() {
-      replace(pointComponent, pointEditComponent);
-    }
-
-    function pointEditHandler () {
-      replacePointToEditor();
-      document.addEventListener('keydown', escKeyDownHandler);
-    }
-
-    function pointSubmitHandler() {
-      replaceEditorToPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
-
-    function pointCloseHandler() {
-      replaceEditorToPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
-
-    render(pointComponent, this.#listComponent.element);
-  };
+    pointPresenter.init(point);
+    this.#pointsPresenter.set(point.id, pointPresenter);
+  }
 }

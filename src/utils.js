@@ -1,6 +1,9 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import relativetime from 'dayjs/plugin/relativeTime';
+import {FilterType} from './const.js';
 dayjs.extend(duration);
+dayjs.extend(relativetime);
 
 const MSEC_IN_SEC = 1000;
 const SEC_IN_MIN = 60;
@@ -38,5 +41,30 @@ const calcDuration = (dateFrom, dateTo) => {
 };
 
 const toCapitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
-export {MSEC_IN_HOUR,MSEC_IN_DAY,getRandomArrayElement,getRandomPositiveNumber,formatStringToDate,formatStringToShortDate,formatStringToTime,formatStringToDelimetrDate,toCapitalize,calcDuration,};
+const isPointFuture = (point) => dayjs().isBefore(point.dateFrom);
+const isPointPresent = (point) => dayjs().isAfter(point.dateFrom) && dayjs().isBefore(point.dateTo);
+const isPointPast = (point) => dayjs().isAfter(point.dateTo);
+
+const filter = {
+  [FilterType.EVERYTHING]: (points) => [...points],
+  [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
+  [FilterType.PAST]: (points) => points.filter((point) => isPointPast(point))
+};
+
+export {
+  MSEC_IN_HOUR,
+  MSEC_IN_DAY,
+  getRandomArrayElement,
+  getRandomPositiveNumber,
+  formatStringToDate,
+  formatStringToShortDate,
+  formatStringToTime,
+  formatStringToDelimetrDate,
+  toCapitalize,
+  calcDuration,
+  updateItem,
+  filter,
+};
