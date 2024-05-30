@@ -1,6 +1,7 @@
 const CITIES = ['Paris', 'London', 'Chicago', 'Tokio', 'New York', 'Moscow', 'Amsterdam', 'San-Francisco'];
 const DESCRIPTION = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt architecto labore atque!';
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -43,15 +44,4 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
-export {
-  CITIES,
-  DESCRIPTION,
-  EVENT_TYPES,
-  FilterType,
-  SortType,
-  enabledSortType,
-  Counts,
-  Price,
-  Duration,
-  Mode
-};
+export {CITIES, DESCRIPTION, EVENT_TYPES, FilterType, SortType, enabledSortType, Counts, Price, Duration, Mode};

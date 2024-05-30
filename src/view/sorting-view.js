@@ -1,8 +1,5 @@
 import RadioListView from './radio-list-view.js';
-
-import {
-  toCapitalize
-} from '../utils.js';
+import {toCapitalize} from '../utils.js';
 
 const createSortTypeListTemplate = (sorting) => sorting.reduce((markup, {
   type,
