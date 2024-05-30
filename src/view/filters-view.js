@@ -1,21 +1,24 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import {FILTER_TYPES} from '../const.js';
+import RadioListView from './radio-list-view.js';
 import {toCapitalize} from '../utils.js';
 
-const createFilterTypeListTemplate = (filterTypeList) => filterTypeList.reduce((markup, type, id)=>`${markup}
+const createFilterTypeListTemplate = (filters) => filters.reduce((markup, {
+  type,
+  isChecked,
+  isDisabled
+}) => `${markup}
   <div class="trip-filters__filter">
-    <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${(id === 0) ? 'checked' : ''}>
+    <input id="filter-${type}" class="trip-filters__filter-input visually-hidden" type="radio" name="trip-filter" data-item="${type}" value="${type}" ${isChecked ? 'checked' : ''} ${(isDisabled) ? 'disabled' : ''}>
     <label class="trip-filters__filter-label" for="filter-${type}">${toCapitalize(type)}</label>
   </div>`, '');
 
-const createFiltersTemplate = () => `<form class="trip-filters" action="#" method="get">
-    ${createFilterTypeListTemplate(FILTER_TYPES)}
+const createFiltersTemplate = (filters) => `<form class="trip-filters" action="#" method="get">
+      ${createFilterTypeListTemplate(filters)}
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
 
-export default class FiltersView extends AbstractView {
+export default class FiltersView extends RadioListView {
 
   get template() {
-    return createFiltersTemplate();
+    return createFiltersTemplate(this._items);
   }
 }
