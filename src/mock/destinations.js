@@ -6,7 +6,7 @@ const generateDestinations = () => {
   return ({
     id: crypto.randomUUID(),
     name: city,
-    description: DESCRIPTION,
+    description: `It is ${city} description. ${DESCRIPTION}`,
     pictures: Array.from({
       length: getRandomPositiveNumber(0, Counts.DESCRIPTION_PHOTO)
     }, () => ({

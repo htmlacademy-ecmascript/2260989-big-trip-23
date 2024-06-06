@@ -41,10 +41,11 @@ export default class PointPresenter {
       onEditClick: this.#pointEditHandler,
       onFavoriteClick: this.#onFavoriteClick
     });
+
     this.#pointEditComponent = new PointEditorView({
       point: this.#point,
-      pointDestination: this.#destinationsModel.getById(point.destination),
-      pointOffers: this.#offersModel.getByType(point.type),
+      pointDestinations: this.#destinationsModel.get(),
+      pointOffers: this.#offersModel.get(),
       onCloseClick: this.#pointCloseHandler,
       onSubmitForm: this.#pointSubmitHandler
     });

@@ -3,9 +3,8 @@ import EventListView from '../view/event-list-view.js';
 import EventLisEmptytView from '../view/event-list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import SortPresenter from './sort-presenter.js';
-import {updateItem} from '../utils.js';
-import {sorting} from '../utils';
-import {SortType} from '../const';
+import {updateItem, sorting} from '../utils.js';
+import {SortType} from '../const.js';
 
 export default class PointsPresenter {
   #container = null;
