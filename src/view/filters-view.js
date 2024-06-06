@@ -11,7 +11,8 @@ const createFilterTypeListTemplate = (filters) => filters.reduce((markup, {
     <label class="trip-filters__filter-label" for="filter-${type}">${toCapitalize(type)}</label>
   </div>`, '');
 
-const createFiltersTemplate = (filters) => `<form class="trip-filters" action="#" method="get">
+const createFiltersTemplate = (filters) => `
+  <form class="trip-filters" action="#" method="get">
       ${createFilterTypeListTemplate(filters)}
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
