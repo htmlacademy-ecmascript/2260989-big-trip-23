@@ -141,7 +141,7 @@ const createPointEditorTemplate = ({
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" pattern="^[ 0-9]+$" name="event-price" value="${he.encode(String(basePrice))}">
+            <input class="event__input  event__input--price" id="event-price-1" type="number" pattern="^\\d+$" name="event-price" value="${he.encode(String(basePrice))}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving' : 'Save'}</button>
