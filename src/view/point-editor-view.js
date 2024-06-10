@@ -2,7 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import {EVENT_TYPES, EditType, POINT_EMPTY} from '../const.js';
-import {toCapitalize, formatStringToDelimetrDate} from '../utils.js';
+import { toCapitalize, formatStringToDelimetrDate} from '../utils.js';
 
 const createTypesListTemplate = (currentType) => {
   const typeListMarkup = EVENT_TYPES.reduce((markup, type)=>`${markup}
