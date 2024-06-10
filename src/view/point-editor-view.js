@@ -3,7 +3,7 @@ import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import {EVENT_TYPES, EditType, POINT_EMPTY} from '../const.js';
-import {toCapitalize, formatStringToDelimetrDate} from '../utils.js';
+import {toCapitalize, formatStringToDelimiterDate} from '../utils.js';
 
 const createTypesListTemplate = (currentType) => {
   const typeListMarkup = EVENT_TYPES.reduce((markup, type)=>`${markup}
@@ -109,7 +109,7 @@ const createPointEditorTemplate = ({
 
   const isCreating = editorMode === EditType.CREATING;
   const currentDestination = pointDestinations.find(({id}) => id === state.point.destination);
-  const currentPointOffers = pointOffers.find((offer) => offer.type === type).offers;
+  const currentPointOffers = pointOffers.find((offer) => offer.type === type)?.offers;
   const listCities = pointDestinations.map(({name}) => he.encode(name));
   const createCitiesTemplate = (cities) => cities.reduce((markup, city)=>`${markup}<option value="${he.encode(city)}"></option>`, '');
 
@@ -130,10 +130,10 @@ const createPointEditorTemplate = ({
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isCreating ? '' : formatStringToDelimetrDate(dateFrom)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isCreating ? '' : formatStringToDelimiterDate(dateFrom)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isCreating ? '' : formatStringToDelimetrDate(dateTo)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isCreating ? '' : formatStringToDelimiterDate(dateTo)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -149,7 +149,7 @@ const createPointEditorTemplate = ({
 
         </header>
         <section class="event__details">
-          ${createOffersTemplate(currentPointOffers, offers)}
+          ${currentPointOffers ? createOffersTemplate(currentPointOffers, offers) : ''}
           ${createDestinationTemplate(currentDestination)}
         </section>
       </form>

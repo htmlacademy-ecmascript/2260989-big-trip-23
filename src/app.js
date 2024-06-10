@@ -20,22 +20,24 @@ const pointsModel = new PointsModel({
 });
 
 const filtersModel = new FiltersModel();
-const tripMainContainer = document.querySelector('.trip-main');
-const pointsContainer = document.querySelector('.trip-events');
+const tripMainContainerNode = document.querySelector('.trip-main');
+const pointsContainerNode = document.querySelector('.trip-events');
 
 const filtersPresenter = new FiltersPresenter({
   pointsModel,
   filtersModel
 });
 const tripInfoPresenter = new TripInfoPresenter({
-  container: tripMainContainer,
-  pointsModel
+  container: tripMainContainerNode,
+  destinationsModel,
+  offersModel,
+  pointsModel,
 });
 const addPointButtonPresenter = new AddPointButtonPresenter({
-  container: tripMainContainer
+  container: tripMainContainerNode
 });
 const pointsPresenter = new PointsPresenter({
-  container: pointsContainer,
+  container: pointsContainerNode,
   destinationsModel,
   offersModel,
   pointsModel,

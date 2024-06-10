@@ -1,7 +1,7 @@
 const DEFAULT_EVENT_TYPE = 'flight';
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const DESTINATIONS_ITEMS_COUNT = 3;
-const AUTHORIZATION = 'Basic er883jdzbdw';
+const AUTHORIZATION = 'Basic umB8tRoVHKu5p3GdQ';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const POINT_EMPTY = {
@@ -94,5 +94,5 @@ export {
   EditType,
   Method,
   SourceUrl,
-  TimeLimit
+  TimeLimit,
 };
