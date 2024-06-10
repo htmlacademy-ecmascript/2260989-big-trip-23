@@ -2,17 +2,27 @@ import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
 import PointsPresenter from './presenter/points-presenter.js';
 import AddPointButtonPresenter from './presenter/add-point-button-presenter.js';
-import MockService from './service/mock-service.js';
+
+import PointsApiService from './service/point-api-service.js';
+
 import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import PointsModel from './model/points-model.js';
 import FiltersModel from './model/filters-model.js';
 
-const mockService = new MockService();
+const AUTHORIZATION = 'Basic umB8tRoVHKu5p3GdQ';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
-const destinationsModel = new DestinationsModel(mockService);
-const offersModel = new OffersModel(mockService);
-const pointsModel = new PointsModel(mockService);
+const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);
+
+const destinationsModel = new DestinationsModel(pointsApiService);
+const offersModel = new OffersModel(pointsApiService);
+const pointsModel = new PointsModel({
+  service: pointsApiService,
+  destinationsModel,
+  offersModel
+});
+
 const filtersModel = new FiltersModel();
 const tripMainContainer = document.querySelector('.trip-main');
 const pointsContainer = document.querySelector('.trip-events');
@@ -45,5 +55,6 @@ export default class BigTripApp {
       onButtonClick: pointsPresenter.addPointButtonClickHandler
     });
     pointsPresenter.init();
+    pointsModel.init();
   }
 }

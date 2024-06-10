@@ -1,4 +1,4 @@
-import {remove,render,replace} from '../framework/render.js';
+import {remove, render, replace} from '../framework/render.js';
 import PointView from '../view/point-view.js';
 import PointEditorView from '../view/point-editor-view.js';
 import {isMinorChange} from '../utils.js';
@@ -79,6 +79,39 @@ export default class PointPresenter {
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
   }
+
+  setSaving = () => {
+    if(this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  };
+
+  setAborting = () => {
+    if(this.#mode === Mode.DEFAULT) {
+      this.#pointEditComponent.shake();
+    }
+    if(this.#mode === Mode.EDITING) {
+      const resetFormState = () => {
+        this.#pointEditComponent.updateElement({
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
+        });
+      };
+
+      this.#pointEditComponent.shake(resetFormState);
+    }
+  };
+
+  setDeleting = () => {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isDeleting: true,
+    });
+  };
 
   #replacePointToEditor() {
     replace(this.#pointEditComponent, this.#pointComponent);
