@@ -1,8 +1,9 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import {EVENT_TYPES, EditType, POINT_EMPTY} from '../const.js';
-import { toCapitalize, formatStringToDelimetrDate} from '../utils.js';
+import {toCapitalize, formatStringToDelimiterDate} from '../utils.js';
 
 const createTypesListTemplate = (currentType) => {
   const typeListMarkup = EVENT_TYPES.reduce((markup, type)=>`${markup}
@@ -31,11 +32,11 @@ const createTypesListTemplate = (currentType) => {
 const createOffersTemplate = (offers, pointOffers) => {
   const offersMarkup = offers.reduce((markup, {id, title, price})=>`${markup}
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}-1" type="checkbox" name="event-offer-${id}" data-offer-id="${id}" ${pointOffers.find((offer)=>offer === id) ? 'checked' : ''}>
-      <label class="event__offer-label" for="event-offer-${id}-1">
-        <span class="event__offer-title">${title}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${he.encode(id)}-1" type="checkbox" name="event-offer-${he.encode(id)}" data-offer-id="${he.encode(id)}" ${pointOffers.find((offer)=>offer === id) ? 'checked' : ''}>
+      <label class="event__offer-label" for="event-offer-${he.encode(id)}-1">
+        <span class="event__offer-title">${he.encode(title)}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${price}</span>
+        <span class="event__offer-price">${he.encode(String(price))}</span>
       </label>
     </div>`, '');
   if (offers.length) {
@@ -53,7 +54,7 @@ const createOffersTemplate = (offers, pointOffers) => {
 
 const createDestinationPhotosTemplate = (destinations) => {
   const picturesMarkup = destinations?.pictures.reduce((markup, {src, description})=>`${markup}
-  <img class="event__photo" src="${src}" alt="${description}">`, '');
+  <img class="event__photo" src="${he.encode(src)}" alt="${he.encode(description)}">`, '');
 
   if (destinations?.pictures.length) {
     return `
@@ -70,7 +71,7 @@ const createDestinationPhotosTemplate = (destinations) => {
 const createDestinationTemplate = (destination) => destination ?
   `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${destination.description}</p>
+    <p class="event__destination-description">${he.encode(destination.description)}</p>
     ${createDestinationPhotosTemplate(destination)}
   </section>` : '';
 
@@ -108,20 +109,20 @@ const createPointEditorTemplate = ({
 
   const isCreating = editorMode === EditType.CREATING;
   const currentDestination = pointDestinations.find(({id}) => id === state.point.destination);
-  const currentPointOffers = pointOffers.find((offer) => offer.type === type).offers;
-  const listCities = pointDestinations.map(({name}) => name);
-  const createCitiesTemplate = (cities) => cities.reduce((markup, city)=>`${markup}<option value="${city}"></option>`, '');
+  const currentPointOffers = pointOffers.find((offer) => offer.type === type)?.offers;
+  const listCities = pointDestinations.map(({name}) => he.encode(name));
+  const createCitiesTemplate = (cities) => cities.reduce((markup, city)=>`${markup}<option value="${he.encode(city)}"></option>`, '');
 
   return `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
-          ${createTypesListTemplate(type)}
+          ${createTypesListTemplate(he.encode(type))}
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              ${toCapitalize(type)}
+              ${toCapitalize(he.encode(type))}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${currentDestination ? currentDestination.name : ''}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${currentDestination ? he.encode(currentDestination.name) : ''}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${createCitiesTemplate(listCities)}
             </datalist>
@@ -129,10 +130,10 @@ const createPointEditorTemplate = ({
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isCreating ? '' : formatStringToDelimetrDate(dateFrom)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isCreating ? '' : formatStringToDelimiterDate(dateFrom)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isCreating ? '' : formatStringToDelimetrDate(dateTo)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${isCreating ? '' : formatStringToDelimiterDate(dateTo)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -140,7 +141,7 @@ const createPointEditorTemplate = ({
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" pattern="^[ 0-9]+$" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="number" pattern="^\\d+$" name="event-price" value="${he.encode(String(basePrice))}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving' : 'Save'}</button>
@@ -148,7 +149,7 @@ const createPointEditorTemplate = ({
 
         </header>
         <section class="event__details">
-          ${createOffersTemplate(currentPointOffers, offers)}
+          ${currentPointOffers ? createOffersTemplate(currentPointOffers, offers) : ''}
           ${createDestinationTemplate(currentDestination)}
         </section>
       </form>

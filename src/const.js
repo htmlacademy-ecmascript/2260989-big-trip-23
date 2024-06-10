@@ -1,5 +1,8 @@
 const DEFAULT_EVENT_TYPE = 'flight';
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const DESTINATIONS_ITEMS_COUNT = 3;
+const AUTHORIZATION = 'Basic umB8tRoVHKu5p3GdQ';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const POINT_EMPTY = {
   basePrice: 0,
@@ -70,7 +73,15 @@ const SourceUrl = {
   DESTINATIONS: 'destinations',
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export {
+  DESTINATIONS_ITEMS_COUNT,
+  AUTHORIZATION,
+  END_POINT,
   EVENT_TYPES,
   POINT_EMPTY,
   FilterType,
@@ -83,4 +94,5 @@ export {
   EditType,
   Method,
   SourceUrl,
+  TimeLimit,
 };

@@ -2,17 +2,12 @@ import {render, remove} from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import LoadingView from '../view/loading-view.js';
 import EventListView from '../view/event-list-view.js';
-import EventLisEmptytView from '../view/event-list-empty-view.js';
+import EventListEmptyView from '../view/event-list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import SortPresenter from './sort-presenter.js';
-import {filter, sorting} from '../utils.js';
-import {SortType, UserAction, UpdateType, FilterType} from '../const.js';
+import {filter, sorting} from '../utils';
+import {SortType, UserAction, UpdateType, FilterType, TimeLimit} from '../const';
 import AddPointPresenter from './add-point-presenter.js';
-
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
 
 export default class PointsPresenter {
   #container = null;
@@ -31,6 +26,7 @@ export default class PointsPresenter {
   #addPointButtonPresenter = null;
   #isCreating = false;
   #isLoading = true;
+  #isError = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
@@ -89,11 +85,17 @@ export default class PointsPresenter {
       return;
     }
 
+    if (this.#isError) {
+      this.#addPointButtonPresenter.disableButton();
+      return;
+    }
+
     if (this.points.length === 0 && !this.#isCreating) {
       this.#addPointButtonPresenter.enableButton();
       this.#renderEmptyList();
       return;
     }
+
 
     this.#addPointButtonPresenter.enableButton();
     this.#renderSort();
@@ -106,7 +108,7 @@ export default class PointsPresenter {
   }
 
   #renderEmptyList() {
-    this.#emptyListComponent = new EventLisEmptytView({
+    this.#emptyListComponent = new EventListEmptyView({
       filterType: this.#filtersModel.get()
     });
     render(this.#emptyListComponent, this.#container);
@@ -152,7 +154,7 @@ export default class PointsPresenter {
 
   #clearBoard = ({resetSortType = false} = {}) => {
     this.#clearPoints();
-    this.#sortPresenter.destroy();
+    this.#sortPresenter?.destroy();
     remove(this.#emptyListComponent);
 
     if(resetSortType) {
@@ -219,6 +221,7 @@ export default class PointsPresenter {
     }
     if(updateType === UpdateType.INIT) {
       this.#isLoading = false;
+      this.#isError = data.isError;
       remove(this.#loadingComponent);
       this.#renderBoard();
     }

@@ -1,5 +1,5 @@
 import {render} from '../framework/render.js';
-import AddPointButtonVeiw from '../view/add-point-button-veiw.js';
+import AddPointButtonView from '../view/add-point-button-view.js';
 
 export default class AddPointButtonPresenter {
   #container = null;
@@ -12,7 +12,7 @@ export default class AddPointButtonPresenter {
 
   init({onButtonClick}) {
     this.#handleButtonClick = onButtonClick;
-    this.#buttonComponent = new AddPointButtonVeiw({onNewPointButtonClick: this.#buttonClickHandler});
+    this.#buttonComponent = new AddPointButtonView({onNewPointButtonClick: this.#buttonClickHandler});
     render(this.#buttonComponent, this.#container);
   }
 

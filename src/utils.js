@@ -1,14 +1,13 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativetime from 'dayjs/plugin/relativeTime';
-import {FilterType} from './const.js';
-import {SortType} from './const.js';
+import {DESTINATIONS_ITEMS_COUNT, FilterType, SortType} from './const.js';
 
 dayjs.extend(duration);
 dayjs.extend(relativetime);
 
 const formatStringToDate = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
-const formatStringToDelimetrDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
+const formatStringToDelimiterDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 const formatStringToShortDate = (date) => dayjs(date).format('MMM DD');
 const formatStringToTime = (date) => dayjs(date).format('HH:mm');
 const calcDuration = (dateFrom, dateTo) => {
@@ -60,9 +59,9 @@ const adaptToServer = (point) => {
   return adaptedPoint;
 };
 
-const isPointFuture = (point) => dayjs().isBefore(point.dateFrom);
-const isPointPresent = (point) => dayjs().isAfter(point.dateFrom) && dayjs().isBefore(point.dateTo);
-const isPointPast = (point) => dayjs().isAfter(point.dateTo);
+const isPointFuture = (point) => dayjs(point.dateFrom).isAfter(dayjs(), 'D');
+const isPointPresent = (point) => (dayjs(point.dateFrom).isBefore(dayjs(), 'D') || dayjs(point.dateFrom).isSame(dayjs(), 'D')) && (dayjs(point.dateTo).isAfter(dayjs(), 'D') || dayjs(point.dateTo).isSame(dayjs(), 'D'));
+const isPointPast = (point) => dayjs(point.dateTo).isBefore(dayjs(), 'D');
 const filter = {
   [FilterType.EVERYTHING]: (points) => [...points],
   [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
@@ -89,11 +88,27 @@ const sorting = {
   },
 };
 
+const getTripRoute = (points = [], destinations = []) => {
+  const destinationNames = sorting[SortType.DAY]([...points])
+    .map((point) => destinations
+      .find((destination) => destination.id === point.destination).name);
+
+  return destinationNames <= DESTINATIONS_ITEMS_COUNT ? destinationNames.join('&nbsp;&mdash;&nbsp;') : `${destinationNames.at(0)}&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;${destinationNames.at(-1)}`;
+};
+const getTripDurationPeriod = (points = []) => {
+  const sortedPoints = sorting[SortType.DAY]([...points]);
+
+  return sortedPoints.length ? `${dayjs(sortedPoints.at(0).dateFrom).format('DD MMM')}&nbsp;&mdash;&nbsp;${dayjs(sortedPoints.at(-1).dateTo).format('DD MMM')}` : '';
+};
+const getCheckedOffers = (offers, type) => offers.find((offer) => type === offer.type)?.offers;
+const getOffersCost = (offerIDs = [], offers = []) => offerIDs.reduce((offerCost, id) => offerCost + (offers.find((offer) => offer.id === id)?.price ?? 0), 0);
+const getTripCost = (points = [], offers = []) => points.reduce((total, point) => total + point.basePrice + getOffersCost(point.offers, getCheckedOffers(offers, point.type)), 0);
+
 export {
   formatStringToDate,
   formatStringToShortDate,
   formatStringToTime,
-  formatStringToDelimetrDate,
+  formatStringToDelimiterDate,
   toCapitalize,
   calcDuration,
   updateItem,
@@ -102,4 +117,7 @@ export {
   filter,
   sorting,
   isMinorChange,
+  getTripRoute,
+  getTripDurationPeriod,
+  getTripCost,
 };

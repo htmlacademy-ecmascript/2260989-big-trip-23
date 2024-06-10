@@ -1,17 +1,13 @@
+import {AUTHORIZATION, END_POINT} from './const.js';
 import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
 import PointsPresenter from './presenter/points-presenter.js';
 import AddPointButtonPresenter from './presenter/add-point-button-presenter.js';
-
 import PointsApiService from './service/point-api-service.js';
-
 import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import PointsModel from './model/points-model.js';
 import FiltersModel from './model/filters-model.js';
-
-const AUTHORIZATION = 'Basic umB8tRoVHKu5p3GdQ';
-const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);
 
@@ -24,22 +20,24 @@ const pointsModel = new PointsModel({
 });
 
 const filtersModel = new FiltersModel();
-const tripMainContainer = document.querySelector('.trip-main');
-const pointsContainer = document.querySelector('.trip-events');
+const tripMainContainerNode = document.querySelector('.trip-main');
+const pointsContainerNode = document.querySelector('.trip-events');
 
 const filtersPresenter = new FiltersPresenter({
   pointsModel,
   filtersModel
 });
 const tripInfoPresenter = new TripInfoPresenter({
-  container: tripMainContainer,
-  pointsModel
+  container: tripMainContainerNode,
+  destinationsModel,
+  offersModel,
+  pointsModel,
 });
 const addPointButtonPresenter = new AddPointButtonPresenter({
-  container: tripMainContainer
+  container: tripMainContainerNode
 });
 const pointsPresenter = new PointsPresenter({
-  container: pointsContainer,
+  container: pointsContainerNode,
   destinationsModel,
   offersModel,
   pointsModel,
