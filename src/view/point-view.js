@@ -22,7 +22,7 @@ const getCheckedOffers = (allOffers, pointOffersIDs) => {
 const createOffersTemplate = (offers) => {
   const items = offers.reduce((markup, {title, price}) => `${markup}
      <li class="event__offer">
-      <span class="event__offer-title">${he.encode(String(title))}</span>
+      <span class="event__offer-title">${he.encode(title)}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${he.encode(String(price))}</span>
     </li>`, '');
@@ -65,9 +65,9 @@ const createPointTemplate = ({
       <div class="event">
         <time class="event__date" datetime="${formatStringToDate(dateFrom)}">${formatStringToShortDate(dateFrom)}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${he.encode(String(type))}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${he.encode(type)}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${toCapitalize(he.encode(String(type)))} ${he.encode(String(pointDestination?.name)) ?? ''}</h3>
+        <h3 class="event__title">${toCapitalize(he.encode(type))} ${he.encode(pointDestination?.name) ?? ''}</h3>
         ${createSheduleTemplate(dateFrom, dateTo)}
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${he.encode(String(basePrice))}</span>
