@@ -1,90 +1,42 @@
-import {Counts} from '../mock/const.js';
-import {getRandomPositiveNumber, getRandomArrayElement} from '../mock/utils.js';
-import {generateMockDestinations} from '../mock/destinations.js';
-import {generateMockOffers} from '../mock/offers.js';
-import {generateMockPoint} from '../mock/point.js';
-import {EVENT_TYPES} from '../const.js';
+import {render, replace, remove} from '../framework/render.js';
+import SortingView from '../view/sorting-view.js';
+import {SortType, enabledSortType} from '../const';
 
-export default class MockService {
-  #destinations = [];
-  #offers = [];
-  #points = [];
 
-  constructor() {
-    this.#destinations = this.#getUniqDestinations();
-    this.#offers = this.#generateOffers();
-    this.#points = this.#generatePoints();
-  }
+export default class SortPresenter {
+  #container = null;
+  #sortComponent = null;
+  #sortTypes = [];
+  #currentSortType = SortType.DAY;
+  #sortTypesChangeHandler = null;
 
-  get points() {
-    return this.#points;
-  }
-
-  get destinations() {
-    return this.#destinations;
-  }
-
-  get offers() {
-    return this.#offers;
-  }
-
-  #generateDestinations() {
-    return Array.from({
-      length: Counts.DESTINATIONS
-    }, () => generateMockDestinations());
-  }
-
-  #generateOffers() {
-    return EVENT_TYPES.map((type) => ({
+  constructor({container, onSortTypeChange}) {
+    this.#container = container;
+    this.#sortTypes = Object.values(SortType).map((type) => ({
       type,
-      offers: Array.from({
-        length: getRandomPositiveNumber(0, Counts.OFFERS)
-      }, () => generateMockOffers(type))
+      isChecked: (type === this.#currentSortType),
+      isDisabled: !enabledSortType[type]
     }));
+    this.#sortTypesChangeHandler = onSortTypeChange;
   }
 
-  #generatePoints() {
-    return Array.from({
-      length: Counts.POINTS
-    }, () => {
-      const type = getRandomArrayElement(EVENT_TYPES);
-      const destination = getRandomArrayElement(this.#destinations);
+  init() {
+    const prevSortComponent = this.#sortComponent;
 
-      const offersByType = this.#offers.find((offerByType) => offerByType.type === type);
-
-      const randomOffers = new Set();
-      Array.from({
-        length: getRandomPositiveNumber(1, offersByType.offers.length)
-      }, () => {
-        randomOffers.add(getRandomArrayElement(offersByType.offers));
-      });
-      const hasOffers = (randomOffers.size > 0 && [...randomOffers][0]);
-      const offerIDs = hasOffers ? [...randomOffers]
-        .map((offer) => offer.id) : [];
-
-      return generateMockPoint(type, destination.id, offerIDs);
+    this.#sortComponent = new SortingView({
+      items: this.#sortTypes,
+      onItemChange: this.#sortTypesChangeHandler
     });
+
+    if (prevSortComponent) {
+      replace(this.#sortComponent, prevSortComponent);
+      remove(prevSortComponent);
+    } else {
+      render(this.#sortComponent, this.#container);
+    }
   }
 
-  #getUniqDestinations() {
-    const uniqDestinations = [];
-    this.#generateDestinations().forEach((destination) => {
-      if (!uniqDestinations.some((uniqDestination) => uniqDestination.name === destination.name)) {
-        uniqDestinations.push(destination);
-      }
-    });
-    return uniqDestinations;
-  }
-
-  updatePoint(updatedPoint) {
-    return updatedPoint;
-  }
-
-  addPoint(data) {
-    return data;
-  }
-
-  deletePoint() {
-    // method is not defined
+  destroy() {
+    remove(this.#sortComponent);
   }
 }
