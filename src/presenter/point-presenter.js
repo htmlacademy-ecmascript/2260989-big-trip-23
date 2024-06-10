@@ -1,7 +1,8 @@
 import {remove,render,replace} from '../framework/render.js';
 import PointView from '../view/point-view.js';
 import PointEditorView from '../view/point-editor-view.js';
-import {Mode} from '../const.js';
+import {isMinorChange} from '../utils.js';
+import {Mode, UserAction, UpdateType} from '../const.js';
 
 export default class PointPresenter {
   #pointListContainer = null;
@@ -39,7 +40,7 @@ export default class PointPresenter {
       pointDestination: this.#destinationsModel.getById(point.destination),
       pointOffers: this.#offersModel.getByType(point.type),
       onEditClick: this.#pointEditHandler,
-      onFavoriteClick: this.#onFavoriteClick
+      onFavoriteClick: this.#favoriteClickHandler
     });
 
     this.#pointEditComponent = new PointEditorView({
@@ -47,7 +48,8 @@ export default class PointPresenter {
       pointDestinations: this.#destinationsModel.get(),
       pointOffers: this.#offersModel.get(),
       onCloseClick: this.#pointCloseHandler,
-      onSubmitForm: this.#pointSubmitHandler
+      onDeleteClick: this.#deleteClickHandler,
+      onFormSubmit: this.#pointSubmitHandler
     });
 
     if (!prevPointComponent || !prevPointEditComponent) {
@@ -103,15 +105,21 @@ export default class PointPresenter {
   };
 
   #pointSubmitHandler = (point) => {
-    this.#handleDataChange(point);
+    const currentType = isMinorChange(point, this.#point) ? UpdateType.MINOR : UpdateType.PATCH;
+    this.#handleDataChange(UserAction.UPDATE_POINT, currentType, point);
     this.#replaceEditorToPoint();
   };
 
   #pointCloseHandler = () => {
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceEditorToPoint();
   };
 
-  #onFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite });
+  #favoriteClickHandler = () => {
+    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.PATCH, {...this.#point, isFavorite: !this.#point.isFavorite });
+  };
+
+  #deleteClickHandler = (point) => {
+    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, point);
   };
 }

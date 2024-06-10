@@ -1,5 +1,5 @@
-import {Price} from '../const.js';
-import {getRandomPositiveNumber} from '../utils.js';
+import {Price} from './const.js';
+import {getRandomPositiveNumber} from './utils.js';
 
 const generateOffers = (type) => ({
   id: crypto.randomUUID(),

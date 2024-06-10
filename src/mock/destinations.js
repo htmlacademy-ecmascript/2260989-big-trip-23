@@ -1,7 +1,7 @@
-import {DESCRIPTION,CITIES,Counts} from '../const.js';
-import {getRandomArrayElement,getRandomPositiveNumber} from '../utils.js';
+import {DESCRIPTION,CITIES,Counts} from './const.js';
+import {getRandomArrayElement,getRandomPositiveNumber} from './utils.js';
 
-const generateDestinations = () => {
+const generateMockDestinations = () => {
   const city = getRandomArrayElement(CITIES);
   return ({
     id: crypto.randomUUID(),
@@ -17,5 +17,5 @@ const generateDestinations = () => {
 };
 
 export {
-  generateDestinations
+  generateMockDestinations
 };

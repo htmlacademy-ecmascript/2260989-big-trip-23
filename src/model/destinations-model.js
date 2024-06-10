@@ -1,16 +1,18 @@
-//Создаем класс для управления данными о пунктах назначения
 export default class DestinationsModel {
+  #service = null;
+  #destinations = null;
+
   constructor(service) {
-    this.service = service;
-    this.destinations = this.service.getDestinations();
+    this.#service = service;
+    this.#destinations = this.#service.destinations;
   }
 
   get() {
-    return this.destinations;
+    return this.#destinations;
   }
 
   getById(id) {
-    return this.destinations
+    return this.#destinations
       .find((destination) => destination.id === id);
   }
 }

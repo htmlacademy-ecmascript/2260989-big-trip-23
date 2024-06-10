@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {formatStringToDate,formatStringToShortDate,formatStringToTime,toCapitalize,calcDuration} from '../utils.js';
+import he from 'he';
+import {formatStringToDate, formatStringToShortDate, formatStringToTime, toCapitalize, calcDuration} from '../utils.js';
 
 const getCheckedOffers = (allOffers, pointOffersIDs) => {
   const checkedOffers = [];
@@ -60,16 +61,17 @@ const createPointTemplate = ({
     type,
     isFavorite
   } = point;
+
   return `<li class="trip-events__item">
       <div class="event">
         <time class="event__date" datetime="${formatStringToDate(dateFrom)}">${formatStringToShortDate(dateFrom)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${toCapitalize(type)} ${pointDestination.name}</h3>
+        <h3 class="event__title">${toCapitalize(type)} ${pointDestination?.name ?? ''}</h3>
         ${createSheduleTemplate(dateFrom, dateTo)}
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${he.encode(String(basePrice))}</span>
         </p>
         ${createOffersTemplate(getCheckedOffers(pointOffers, point.offers))}
         <button class="event__favorite-btn ${isFavorite ? ' event__favorite-btn--active' : ''}" type="button">

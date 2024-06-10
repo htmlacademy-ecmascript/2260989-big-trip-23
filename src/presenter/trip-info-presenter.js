@@ -1,11 +1,26 @@
-import {render,RenderPosition} from '../framework/render.js';
+import {render, replace, remove, RenderPosition} from '../framework/render.js';
 import TripInfoView from '../view/trip-info-view.js';
 
-const tripMainContainer = document.querySelector('.trip-main');
-
 export default class TripInfoPresenter {
+  #container = null;
+  #tripInfoComponent = null;
+
+  constructor({container}) {
+    this.#container = container;
+  }
 
   init() {
-    render(new TripInfoView(), tripMainContainer, RenderPosition.AFTERBEGIN);
+    const prevTripInfoComponent = this.#tripInfoComponent;
+    this.#tripInfoComponent = new TripInfoView();
+
+    if(!prevTripInfoComponent) {
+      render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
+      return;
+    }
+
+    replace(this.#tripInfoComponent, prevTripInfoComponent);
+    remove(prevTripInfoComponent);
+
+    render(this.#tripInfoComponent, this.#container);
   }
 }

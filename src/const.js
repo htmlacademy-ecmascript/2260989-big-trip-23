@@ -1,6 +1,23 @@
-const CITIES = ['Paris', 'London', 'Chicago', 'Tokio', 'New York', 'Moscow', 'Amsterdam', 'San-Francisco'];
-const DESCRIPTION = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt architecto labore atque!';
+const DEFAULT_EVENT_TYPE = 'flight';
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
+const TimePeriods = {
+  SEC_IN_MIN : 60,
+  MIN_IN_HOUR : 60,
+  HOUR_IN_DAY : 24,
+  MSEC_IN_SEC : 1000,
+};
+
+const POINT_EMPTY = {
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  isFavorite: false,
+  offers: [],
+  type: DEFAULT_EVENT_TYPE,
+};
+
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -14,7 +31,6 @@ const SortType = {
   PRICE: 'price',
   OFFER: 'offer',
 };
-
 const enabledSortType = {
   [SortType.DAY]: true,
   [SortType.EVENT]: false,
@@ -22,25 +38,41 @@ const enabledSortType = {
   [SortType.PRICE]: true,
   [SortType.OFFER]: false,
 };
-
-const Counts = {
-  DESTINATIONS: 10,
-  DESCRIPTION_PHOTO: 4,
-  OFFERS: 7,
-  POINTS: 5,
+const EmptyListMessage = {
+  EVERYTHING : 'Click New Event to create your first point',
+  FUTURE : 'There are no future events now',
+  PRESENT : 'There are no present events now',
+  PAST : 'There are no past events now',
 };
-const Price = {
-  MIN: 1,
-  MAX: 500
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+  CREATE_POINT: 'CREATE_POINT',
 };
-const Duration = {
-  HOUR: 5,
-  DAY: 3,
-  MINUTE: 59
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
 };
 const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
 };
+const EditType = {
+  EDITING: 'EDITING',
+  CREATING: 'CREATING',
+};
 
-export {CITIES, DESCRIPTION, EVENT_TYPES, FilterType, SortType, enabledSortType, Counts, Price, Duration, Mode};
+export {
+  EVENT_TYPES,
+  TimePeriods,
+  POINT_EMPTY,
+  FilterType,
+  SortType,
+  enabledSortType,
+  EmptyListMessage,
+  UserAction,
+  UpdateType,
+  Mode,
+  EditType,
+};

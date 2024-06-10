@@ -1,27 +1,13 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativetime from 'dayjs/plugin/relativeTime';
-import {FilterType} from './const.js';
-import {SortType} from './const.js';
+import {TimePeriods, FilterType, SortType} from './const.js';
 
 dayjs.extend(duration);
 dayjs.extend(relativetime);
 
-const MSEC_IN_SEC = 1000;
-const SEC_IN_MIN = 60;
-const MIN_IN_HOUR = 60;
-const HOUR_IN_DAY = 24;
-
-const MSEC_IN_HOUR = MSEC_IN_SEC * SEC_IN_MIN * MIN_IN_HOUR;
-const MSEC_IN_DAY = MSEC_IN_HOUR * HOUR_IN_DAY;
-
-const getRandomPositiveNumber = (min = 0, max = 1) => {
-  const lower = Math.ceil(Math.min(min, max));
-  const upper = Math.floor(Math.max(min, max));
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-const getRandomArrayElement = (items) => items[getRandomPositiveNumber(0, items.length - 1)];
+const MSEC_IN_HOUR = TimePeriods.MSEC_IN_SEC * TimePeriods.SEC_IN_MIN * TimePeriods.MIN_IN_HOUR;
+const MSEC_IN_DAY = TimePeriods.MSEC_IN_HOUR * TimePeriods.HOUR_IN_DAY;
 
 const formatStringToDate = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
 const formatStringToDelimetrDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
@@ -44,6 +30,9 @@ const calcDuration = (dateFrom, dateTo) => {
 
 const toCapitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+const isMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom
+  || pointA.basePrice !== pointB.basePrice
+  || calcDuration(pointA.dateFrom, pointA.dateTo) !== calcDuration(pointB.dateFrom, pointB.dateTo);
 
 const isPointFuture = (point) => dayjs().isBefore(point.dateFrom);
 const isPointPresent = (point) => dayjs().isAfter(point.dateFrom) && dayjs().isBefore(point.dateTo);
@@ -77,10 +66,6 @@ const sorting = {
 };
 
 export {
-  MSEC_IN_HOUR,
-  MSEC_IN_DAY,
-  getRandomArrayElement,
-  getRandomPositiveNumber,
   formatStringToDate,
   formatStringToShortDate,
   formatStringToTime,
@@ -89,5 +74,6 @@ export {
   calcDuration,
   updateItem,
   filter,
-  sorting
+  sorting,
+  isMinorChange
 };
