@@ -1,27 +1,58 @@
-import {render} from '../framework/render.js';
+import {render, replace, remove} from '../framework/render.js';
 import FiltersView from '../view/filters-view.js';
 import {filter} from '../utils';
+import {UpdateType} from '../const';
 
 export default class FiltersPresenter {
-  #container = null;
+  #container = document.querySelector('.trip-controls__filters');
   #pointsModel = null;
-  #filters = [];
+  #filtersModel = null;
+  #currentFilter = null;
+  #filterComponent = null;
 
-  constructor({container, pointsModel}) {
-    this.#container = container;
+  constructor({pointsModel, filtersModel}) {
     this.#pointsModel = pointsModel;
+    this.#filtersModel = filtersModel;
 
-    this.#filters = Object.entries(filter)
-      .map(([filterType, filterPoints], index) => ({
+    this.#pointsModel.addObserver(this.#modelEventHandler);
+    this.#filtersModel.addObserver(this.#modelEventHandler);
+  }
+
+  get filters() {
+    const points = this.#pointsModel.get();
+
+    return Object.entries(filter)
+      .map(([filterType, filterPoints]) => ({
         type: filterType,
-        isChecked: index === 0,
-        isDisabled: filterPoints(this.#pointsModel.get()).length === 0
+        isChecked: filterType === this.#currentFilter,
+        isDisabled: filterPoints(points).length === 0
       }));
   }
 
   init() {
-    render(new FiltersView({
-      items: this.#filters
-    }), this.#container);
+    this.#currentFilter = this.#filtersModel.get();
+    const filters = this.filters;
+
+    const prevFiltersComponent = this.#filterComponent;
+    this.#filterComponent = new FiltersView({
+      items: filters,
+      onItemChange: this.#filterTypesChangeHandler
+    });
+
+    if(!prevFiltersComponent) {
+      render(this.#filterComponent, this.#container);
+      return;
+    }
+
+    replace(this.#filterComponent, prevFiltersComponent);
+    remove(prevFiltersComponent);
   }
+
+  #filterTypesChangeHandler = (filterType) => {
+    this.#filtersModel.set(UpdateType.MAJOR, filterType);
+  };
+
+  #modelEventHandler = () => {
+    this.init();
+  };
 }

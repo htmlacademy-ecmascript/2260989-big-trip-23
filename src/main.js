@@ -1,5 +1,5 @@
-import MainPresenter from './presenter/main-presenter.js';
+import BigTripApp from './app.js';
 
-const mainPresenter = new MainPresenter();
+const bigTripApp = new BigTripApp();
 
-mainPresenter.init();
+bigTripApp.init();
