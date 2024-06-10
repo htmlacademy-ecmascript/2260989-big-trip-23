@@ -1,7 +1,6 @@
-import { EditType } from '../const.js';
+import {EditType, UserAction, UpdateType} from '../const.js';
 import {render, RenderPosition, remove} from '../framework/render.js';
 import PointEditorView from '../view/point-editor-view.js';
-import {UserAction, UpdateType,} from '../const';
 
 export default class AddPointPresenter {
   #container = null;
@@ -47,6 +46,25 @@ export default class AddPointPresenter {
 
     this.#handleDestroy({isCanceled});
   }
+
+  setSaving = () => {
+    this.#addPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#addPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#addPointComponent.shake(resetFormState);
+  };
 
   #cancelClickHandler = () => {
     this.destroy();
