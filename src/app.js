@@ -11,7 +11,7 @@ import PointsModel from './model/points-model.js';
 import FiltersModel from './model/filters-model.js';
 
 const AUTHORIZATION = 'Basic umB8tRoVHKu5p3GdQ';
-const END_POINT = 'https://21.objects.pages.academy/big-trip';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);
 
