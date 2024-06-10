@@ -1,6 +1,7 @@
 const DEFAULT_EVENT_TYPE = 'flight';
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
+
 const TimePeriods = {
   SEC_IN_MIN : 60,
   MIN_IN_HOUR : 60,
