@@ -2,7 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import {EVENT_TYPES, EditType, POINT_EMPTY} from '../const.js';
-import {toCapitalize, formatStringToDelimetrDate} from '../utils.js';
+import { toCapitalize, formatStringToDelimetrDate} from '../utils.js';
 
 const createTypesListTemplate = (currentType) => {
   const typeListMarkup = EVENT_TYPES.reduce((markup, type)=>`${markup}
@@ -74,6 +74,18 @@ const createDestinationTemplate = (destination) => destination ?
     ${createDestinationPhotosTemplate(destination)}
   </section>` : '';
 
+const createButtonTemplate = (isCreating, isDeleting, isDisabled) => {
+  if (isCreating) {
+    return `
+      <button class="event__reset-btn" type="reset">Cancel</button>
+    `;
+  }
+  return `
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting' : 'Delete'}</button>
+    <button class="event__rollup-btn" type="button"><span class="visually-hidden">Open event</span></button>
+    `;
+};
+
 const createPointEditorTemplate = ({
   state,
   pointDestinations,
@@ -88,15 +100,17 @@ const createPointEditorTemplate = ({
     offers
   } = state.point;
 
+  const {
+    isDisabled,
+    isSaving,
+    isDeleting
+  } = state;
+
   const isCreating = editorMode === EditType.CREATING;
   const currentDestination = pointDestinations.find(({id}) => id === state.point.destination);
   const currentPointOffers = pointOffers.find((offer) => offer.type === type).offers;
   const listCities = pointDestinations.map(({name}) => name);
   const createCitiesTemplate = (cities) => cities.reduce((markup, city)=>`${markup}<option value="${city}"></option>`, '');
-  const rollUpTemplate = () => `
-  <button class="event__rollup-btn" type="button">
-    <span class="visually-hidden">Open event</span>
-  </button>`;
 
   return `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -129,9 +143,8 @@ const createPointEditorTemplate = ({
             <input class="event__input  event__input--price" id="event-price-1" type="number" pattern="^[ 0-9]+$" name="event-price" value="${basePrice}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${isCreating ? 'Cancel' : 'Delete'}</button>
-          ${isCreating ? '' : rollUpTemplate()}
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving' : 'Save'}</button>
+          ${createButtonTemplate(isCreating, isDeleting, isDisabled)}
 
         </header>
         <section class="event__details">
@@ -267,7 +280,7 @@ export default class PointEditorView extends AbstractStatefulView {
       point: {
         ...this._state.point,
         basePrice: evt.target.valueAsNumber
-      }
+      },
     });
   };
 
@@ -318,6 +331,16 @@ export default class PointEditorView extends AbstractStatefulView {
     this.#datepickerFrom.set('maxDate', this._state.point.dateTo);
   };
 
-  static parsePointToState = ({point}) => ({point});
+  static parsePointToState = ({
+    point,
+    isDisabled = false,
+    isSaving = false,
+    isDeleting = false,
+  }) => ({
+    point,
+    isDisabled,
+    isSaving,
+    isDeleting,});
+
   static parseStateToPoint = (state) => (state.point);
 }
