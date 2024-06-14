@@ -14,7 +14,7 @@ export default class OffersModel {
     return this.#offers
       .find((offer) => offer.type === type).offers;
   }
-  
+
   async init() {
     this.#offers = await this.#service.offers;
     return this.#offers;

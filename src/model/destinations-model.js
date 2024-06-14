@@ -14,7 +14,7 @@ export default class DestinationsModel {
     return this.#destinations
       .find((destination) => destination.id === id);
   }
-  
+
   async init() {
     this.#destinations = await this.#service.destinations;
     return this.#destinations;

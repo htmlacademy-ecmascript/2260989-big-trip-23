@@ -22,7 +22,7 @@ export default class PointsModel extends Observable {
   getById(id) {
     return this.#points.find((point)=>point.id === id);
   }
-  
+
   async init() {
     try {
       await Promise.all([this.#destinationsModel.init(), this.#offersModel.init()]);
