@@ -21,7 +21,7 @@ const calcDuration = (dateFrom, dateTo) => {
   }
   return eventDuration.format('mm[M]');
 };
-const toCapitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
+const capitalizeFirstLetter = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 const isMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom
   || pointA.basePrice !== pointB.basePrice
@@ -109,7 +109,7 @@ export {
   formatStringToShortDate,
   formatStringToTime,
   formatStringToDelimiterDate,
-  toCapitalize,
+  capitalizeFirstLetter,
   calcDuration,
   updateItem,
   adaptToClient,
