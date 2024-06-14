@@ -103,6 +103,7 @@ const getTripDurationPeriod = (points = []) => {
 const getCheckedOffers = (offers, type) => offers.find((offer) => type === offer.type)?.offers;
 const getOffersCost = (offerIDs = [], offers = []) => offerIDs.reduce((offerCost, id) => offerCost + (offers.find((offer) => offer.id === id)?.price ?? 0), 0);
 const getTripCost = (points = [], offers = []) => points.reduce((total, point) => total + point.basePrice + getOffersCost(point.offers, getCheckedOffers(offers, point.type)), 0);
+const isEscKeyDown = (evt) => evt.key === 'Escape';
 
 export {
   formatStringToDate,
@@ -120,4 +121,5 @@ export {
   getTripRoute,
   getTripDurationPeriod,
   getTripCost,
+  isEscKeyDown,
 };
