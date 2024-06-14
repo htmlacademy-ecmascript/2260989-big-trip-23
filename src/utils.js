@@ -21,7 +21,7 @@ const calcDuration = (dateFrom, dateTo) => {
   }
   return eventDuration.format('mm[M]');
 };
-const toCapitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
+const capitalizeFirstLetter = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 const isMinorChange = (pointA, pointB) => pointA.dateFrom !== pointB.dateFrom
   || pointA.basePrice !== pointB.basePrice
@@ -103,13 +103,14 @@ const getTripDurationPeriod = (points = []) => {
 const getCheckedOffers = (offers, type) => offers.find((offer) => type === offer.type)?.offers;
 const getOffersCost = (offerIDs = [], offers = []) => offerIDs.reduce((offerCost, id) => offerCost + (offers.find((offer) => offer.id === id)?.price ?? 0), 0);
 const getTripCost = (points = [], offers = []) => points.reduce((total, point) => total + point.basePrice + getOffersCost(point.offers, getCheckedOffers(offers, point.type)), 0);
+const isEscKeyDown = (evt) => evt.key === 'Escape';
 
 export {
   formatStringToDate,
   formatStringToShortDate,
   formatStringToTime,
   formatStringToDelimiterDate,
-  toCapitalize,
+  capitalizeFirstLetter,
   calcDuration,
   updateItem,
   adaptToClient,
@@ -120,4 +121,5 @@ export {
   getTripRoute,
   getTripDurationPeriod,
   getTripCost,
+  isEscKeyDown,
 };

@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import he from 'he';
-import {formatStringToDate, formatStringToShortDate, formatStringToTime, toCapitalize, calcDuration} from '../utils.js';
+import {formatStringToDate, formatStringToShortDate, formatStringToTime, capitalizeFirstLetter, calcDuration} from '../utils.js';
 
 const getCheckedOffers = (allOffers, pointOffersIDs) => {
   const checkedOffers = [];
@@ -67,7 +67,7 @@ const createPointTemplate = ({
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${he.encode(type)}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${toCapitalize(he.encode(type))} ${he.encode(pointDestination?.name) ?? ''}</h3>
+        <h3 class="event__title">${capitalizeFirstLetter(he.encode(type))} ${he.encode(pointDestination?.name) ?? ''}</h3>
         ${createScheduleTemplate(dateFrom, dateTo)}
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${he.encode(String(basePrice))}</span>

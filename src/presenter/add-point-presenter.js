@@ -1,13 +1,13 @@
 import {render, RenderPosition, remove} from '../framework/render.js';
 import PointEditorView from '../view/point-editor-view.js';
-import {UserAction, UpdateType, EditType} from '../const';
+import {UserAction, UpdateType, EditType} from '../const.js';
+import {isEscKeyDown} from '../utils.js';
 
 export default class AddPointPresenter {
   #container = null;
   #destinationsModel = null;
   #offersModel = null;
   #addPointComponent = null;
-
   #handleDataChange = null;
   #handleDestroy = null;
 
@@ -81,7 +81,7 @@ export default class AddPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
+    if (isEscKeyDown(evt)) {
       evt.preventDefault();
       this.destroy();
     }

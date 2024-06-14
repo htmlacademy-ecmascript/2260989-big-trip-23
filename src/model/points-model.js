@@ -15,6 +15,14 @@ export default class PointsModel extends Observable {
     this.#offersModel = offersModel;
   }
 
+  get() {
+    return this.#points;
+  }
+
+  getById(id) {
+    return this.#points.find((point)=>point.id === id);
+  }
+
   async init() {
     try {
       await Promise.all([this.#destinationsModel.init(), this.#offersModel.init()]);
@@ -25,14 +33,6 @@ export default class PointsModel extends Observable {
       this.#points = [];
       this._notify(UpdateType.INIT, {isError: true});
     }
-  }
-
-  get() {
-    return this.#points;
-  }
-
-  getById(id) {
-    return this.#points.find((point)=>point.id === id);
   }
 
   async update(updateType, point) {

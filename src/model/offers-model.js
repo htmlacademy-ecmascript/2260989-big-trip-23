@@ -6,11 +6,6 @@ export default class OffersModel {
     this.#service = service;
   }
 
-  async init() {
-    this.#offers = await this.#service.offers;
-    return this.#offers;
-  }
-
   get() {
     return this.#offers;
   }
@@ -18,5 +13,10 @@ export default class OffersModel {
   getByType(type) {
     return this.#offers
       .find((offer) => offer.type === type).offers;
+  }
+
+  async init() {
+    this.#offers = await this.#service.offers;
+    return this.#offers;
   }
 }

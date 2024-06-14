@@ -1,7 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import FiltersView from '../view/filters-view.js';
-import {filter} from '../utils';
-import {UpdateType} from '../const';
+import {filter} from '../utils.js';
+import {UpdateType} from '../const.js';
 
 export default class FiltersPresenter {
   #container = document.querySelector('.trip-controls__filters');

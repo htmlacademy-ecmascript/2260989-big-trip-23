@@ -1,6 +1,6 @@
 import {render, replace, remove} from '../framework/render.js';
 import SortingView from '../view/sorting-view.js';
-import {SortType, enabledSortType} from '../const';
+import {SortType, enabledSortType} from '../const.js';
 
 
 export default class SortPresenter {

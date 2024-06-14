@@ -5,8 +5,8 @@ import EventListView from '../view/event-list-view.js';
 import EventListEmptyView from '../view/event-list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import SortPresenter from './sort-presenter.js';
-import {filter, sorting} from '../utils';
-import {SortType, UserAction, UpdateType, FilterType, TimeLimit} from '../const';
+import {filter, sorting} from '../utils.js';
+import {SortType, UserAction, UpdateType, FilterType, TimeLimit} from '../const.js';
 import AddPointPresenter from './add-point-presenter.js';
 
 export default class PointsPresenter {
@@ -15,7 +15,6 @@ export default class PointsPresenter {
   #offersModel = null;
   #pointsModel = null;
   #filtersModel = null;
-
   #loadingComponent = new LoadingView();
   #listComponent = new EventListView();
   #emptyListComponent = null;
