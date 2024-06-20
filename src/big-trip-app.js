@@ -3,7 +3,7 @@ import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import FiltersPresenter from './presenter/filters-presenter.js';
 import PointsPresenter from './presenter/points-presenter.js';
 import AddPointButtonPresenter from './presenter/add-point-button-presenter.js';
-import PointsApiService from './service/point-api-service.js';
+import PointsApiService from './service/points-api-service.js';
 import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import PointsModel from './model/points-model.js';

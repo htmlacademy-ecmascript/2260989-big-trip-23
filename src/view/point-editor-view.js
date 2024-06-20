@@ -82,7 +82,7 @@ const createButtonTemplate = (isCreating, isDeleting, isDisabled) => {
     `;
   }
   return `
-    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting' : 'Delete'}</button>
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
     <button class="event__rollup-btn" type="button"><span class="visually-hidden">Open event</span></button>
     `;
 };
@@ -144,7 +144,7 @@ const createPointEditorTemplate = ({
             <input class="event__input  event__input--price" id="event-price-1" type="number" pattern="^\\d+$" name="event-price" value="${he.encode(String(basePrice))}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving' : 'Save'}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
           ${createButtonTemplate(isCreating, isDeleting, isDisabled)}
 
         </header>
