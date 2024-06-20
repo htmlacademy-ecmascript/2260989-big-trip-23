@@ -244,5 +244,6 @@ export default class PointsPresenter {
   #renderErrorMessage() {
     this.#errorMessageComponent = new ErrorPointView();
     render(this.#errorMessageComponent, this.#container);
+    this.#isError = true;
   }
 }

@@ -25,6 +25,7 @@ export default class PointsApiService extends ApiService {
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
+    ApiService.checkStatus(response);
     const parsedResponse = await ApiService.parseResponse(response);
     return parsedResponse;
   }
@@ -37,14 +38,18 @@ export default class PointsApiService extends ApiService {
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
+    ApiService.checkStatus(response);
     const parsedResponse = await ApiService.parseResponse(response);
     return parsedResponse;
   }
 
   async deletePoint(point) {
-    await this._load({
+    const response = await this._load({
       url: `${SourceUrl.POINTS}/${point.id}`,
       method: Method.DELETE,
     });
+
+    ApiService.checkStatus(response);
+    return response;
   }
 }
