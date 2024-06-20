@@ -8,6 +8,7 @@ import SortPresenter from './sort-presenter.js';
 import {filter, sorting} from '../utils.js';
 import {SortType, UserAction, UpdateType, FilterType, TimeLimit} from '../const.js';
 import AddPointPresenter from './add-point-presenter.js';
+import ErrorPointView from '../view/error-point-view.js';
 
 export default class PointsPresenter {
   #container = null;
@@ -21,6 +22,7 @@ export default class PointsPresenter {
   #pointsPresenter = new Map();
   #sortPresenter = null;
   #currentSortType = SortType.DAY;
+  #errorMessageComponent = null;
   #addPointPresenter = null;
   #addPointButtonPresenter = null;
   #isCreating = false;
@@ -67,6 +69,7 @@ export default class PointsPresenter {
 
   init() {
     this.#renderBoard();
+    remove(this.#errorMessageComponent);
   }
 
   addPointButtonClickHandler = () => {
@@ -224,6 +227,12 @@ export default class PointsPresenter {
       remove(this.#loadingComponent);
       this.#renderBoard();
     }
+    if(updateType === UpdateType.ERROR) {
+      this.#isLoading = false;
+      remove(this.#loadingComponent);
+      this.#clearBoard();
+      this.#renderErrorMessage();
+    }
   };
 
   #sortTypesChangeHandler = (sortType) => {
@@ -231,4 +240,9 @@ export default class PointsPresenter {
     this.#clearPoints();
     this.#renderPoints();
   };
+
+  #renderErrorMessage() {
+    this.#errorMessageComponent = new ErrorPointView();
+    render(this.#errorMessageComponent, this.#container);
+  }
 }
